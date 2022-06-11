@@ -2,7 +2,7 @@ import spotipy as sp
 from spotipy.oauth2 import SpotifyOAuth
 import os
 from dotenv import load_dotenv
-
+from .SongEntry import SongEntry
 
 class InvalidSearchError(Exception):
     pass
@@ -15,7 +15,7 @@ class SpotifyHandler:
         self.__spotify = None
         self.__scope = scope
         self.__account_info = account_info
-        redirect_uri = 'http://127.0.0.1:6400'
+        redirect_uri = 'http://localhost:6400/callback'
         auth_manager = self.__create_auth_manager(account_info, self.__scope, redirect_uri)
         self.__spotify = sp.Spotify(auth_manager=auth_manager)
         self.__set_device_id()
@@ -198,6 +198,19 @@ class SpotifyHandler:
 
     def get_song(self):
         return self.__spotify.currently_playing()['item']
+    
+    
+    def get_song_info(self):
+        _song = self.__spotify.currently_playing()['item']
+        print(_song)
+        name = _song['name']
+        artist = _song['artists'][0]['name']
+        uri = _song['uri']
+        album = _song['album']['name']
+        popularity = _song['popularity']
+        duration = _song['duration_ms']
+        img_src = _song['album']['images'][0]['url']
+        return SongEntry(name, artist, uri, album, popularity, duration, img_src)
 
 
     def play_saved(self):
