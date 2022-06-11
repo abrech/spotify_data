@@ -16,8 +16,4 @@ def run_collec():
 # setting schedules
 schedule.every(4).seconds.do(run_collec)
 
-
-# checks pending schedules
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+db.select_most_played_uris(10)

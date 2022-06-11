@@ -38,3 +38,11 @@ class SpotifyDatabase:
         insert = f"insert into times values('{song_obj.uri}', {epoch_time});"
         self.__cursor.execute(insert)
         self.__commit()
+    
+    def get_most_played_uris(self, limit):
+        statement = f"select uri from songs order by times_played desc;"
+        uris = self.__cursor.execute(statement).fetchall()
+        uris_limited = uris[:limit]
+        out = [uri[0] for uri in uris_limited]
+        return out
+    
