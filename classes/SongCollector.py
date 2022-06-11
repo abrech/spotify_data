@@ -18,7 +18,7 @@ class SongCollector:
         self.__previous_uri = song_obj.uri
         self.__db.add_song(song_obj)
     
-    def run_collector(self):
+    def run(self):
         ms = self.__spotify.get_ms()
         if ms and ms > self.__min_time_played:
             self.collect()

@@ -232,18 +232,12 @@ class SpotifyHandler:
 
     def play_playlist(self, uri=None):
         self.__spotify.start_playback(device_id=self.__device_id, context_uri=uri)
-        
+
 
     def add_to_playlist(self, uris: [], pl_name):
-        """
-        adds given uris to the given playlist if theyre not already in there
-        :param uris: uris to add
-        :param pl_name: playlist name
-        """
         pl_uri = self.get_playlist_uri(pl_name)
         res = self.__spotify.playlist_items(pl_uri)
         items = res['items']
-        print('[Spotify] Lieder: ', len(items))
         songs = list(map(lambda item: item['track']['uri'], items))
 
         to_remove = []
@@ -254,31 +248,21 @@ class SpotifyHandler:
             uris.remove(uri)
         if len(uris) > 0:
             self.__spotify.playlist_add_items(pl_uri, uris)
-        logging.info(f'\n\n[Spotify] Action: Added {len(uris)} to {pl_name}')
+
 
     def add_to_playlist_without_check(self, uris: [], pl_name):
         pl_uri = self.get_playlist_uri(pl_name)
         self.__spotify.playlist_add_items(pl_uri, uris)
 
+
     def empty_playlist(self, pl_name):
-        """
-        deletes the playlist named general
-        :param pl_name: playlist to delete
-        """
         pl_uri = self.get_playlist_uri(pl_name)
         res = self.__spotify.playlist_items(pl_uri)
         items = res['items']
         songs = list(map(lambda item: item['track']['uri'], items))
         self.__spotify.playlist_remove_all_occurrences_of_items(pl_uri, songs)
-        logging.info(f'\n\n[Spotify] Deleted: {pl_name}')
+
 
     def set_playlist(self, uris, pl_name):
-        """
-        fills the playlist named general with the given uris
-        :param pl_name: playlist to fill
-        :param uris: uris to use
-        """
-        logging.info(f'\n\n[Spotify] Action: Setting {pl_name}')
         self.empty_playlist(pl_name)
         self.add_to_playlist_without_check(uris, pl_name)
-        logging.info(f'\n\n[Spotify] Created: {pl_name} set')
