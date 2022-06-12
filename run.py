@@ -29,9 +29,6 @@ schedule.every().day.at("04:00").do(eval_all)
 print(db.execute_select("select * from songs;"))
 # checks pending schedules
 while True:
-    try:
-        schedule.run_pending()
-        time.sleep(1)
-    except Exception as ex:
-        with open('error.log', 'a+') as f:
-            f.write(str(ex)+"\n")
+    schedule.run_pending()
+    time.sleep(1)
+
