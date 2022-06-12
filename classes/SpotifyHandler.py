@@ -126,7 +126,6 @@ class SpotifyHandler:
         if not results['artists']['items']:
             raise InvalidSearchError(f'No artist named "{original}"')
         artist_uri = results['artists']['items'][0]['uri']
-        print(results['artists']['items'][0]['name'])
         return artist_uri
 
 
@@ -203,7 +202,6 @@ class SpotifyHandler:
     
     def get_song_info(self):
         _song = self.__spotify.currently_playing()['item']
-        print(_song)
         name = _song['name']
         artist = _song['artists'][0]['name']
         uri = _song['uri']
@@ -215,7 +213,7 @@ class SpotifyHandler:
 
 
     def play_saved(self):
-        self.__spotify.start_playback(device_id=self.__device_id, context_uri=spotify.current_user_saved_tracks())
+        self.__spotify.start_playback(device_id=self.__device_id, context_uri=self.__spotify.current_user_saved_tracks())
 
 
     def get_playlist_uri(self, name: str) -> str:
@@ -235,7 +233,7 @@ class SpotifyHandler:
         self.__spotify.start_playback(device_id=self.__device_id, context_uri=uri)
 
 
-    def add_to_playlist(self, uris: [], pl_name):
+    def add_to_playlist(self, uris: list, pl_name):
         pl_uri = self.get_playlist_uri(pl_name)
         res = self.__spotify.playlist_items(pl_uri)
         items = res['items']
@@ -251,7 +249,7 @@ class SpotifyHandler:
             self.__spotify.playlist_add_items(pl_uri, uris)
 
 
-    def add_to_playlist_without_check(self, uris: [], pl_name):
+    def add_to_playlist_without_check(self, uris: list, pl_name):
         pl_uri = self.get_playlist_uri(pl_name)
         self.__spotify.playlist_add_items(pl_uri, uris)
 
