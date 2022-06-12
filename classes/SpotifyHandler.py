@@ -15,7 +15,7 @@ class SpotifyHandler:
         self.__spotify = None
         self.__scope = scope
         self.__account_info = account_info
-        redirect_uri = 'http://localhost:6400/callback'
+        redirect_uri = 'http://89.163.219.212:6400/callback'
         auth_manager = self.__create_auth_manager(account_info, self.__scope, redirect_uri)
         self.__spotify = sp.Spotify(auth_manager=auth_manager)
         self.__set_device_id()
@@ -32,7 +32,8 @@ class SpotifyHandler:
                             client_secret=os.environ.get('CLIENT_SECRET'),
                             redirect_uri=redirect_uri,
                             scope=scope,
-                            username=os.environ.get('USERNAME'))
+                            username=os.environ.get('USERNAME'),
+                            open_browser=False)
     
     def __set_device_id(self):
         devices = self.__spotify.devices()

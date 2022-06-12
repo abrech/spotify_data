@@ -24,8 +24,10 @@ def eval_period():
     ev.evaluate_period('4week', 28, 30)
 
 schedule.every(40).seconds.do(run_collector)
+schedule.every(120).seconds.do(eval_all)
 schedule.every().day.at("04:00").do(eval_all)
 
+print(db.execute_select("select * from songs;"))
 # checks pending schedules
 while True:
     try:
