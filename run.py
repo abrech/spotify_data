@@ -26,7 +26,8 @@ schedule.every(4).seconds.do(run_collector)
 schedule.every(120).seconds.do(eval_all)
 schedule.every().day.at("04:00").do(eval_all)
 
-print(db.execute_select("select * from songs;"))
+for entry in db.execute_select("select * from songs;"):
+    print(str(entry).encode('utf-8'))
 # checks pending schedules
 while True:
     schedule.run_pending()
