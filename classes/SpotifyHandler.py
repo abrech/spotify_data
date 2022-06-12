@@ -28,6 +28,7 @@ class SpotifyHandler:
         :return auth_manager: Created Authentication Manager
         """
         load_dotenv(account_file)
+        print(os.environ.get('CLIENT_ID'), os.environ.get('CLIENT_SECRET'))
         return SpotifyOAuth(client_id=os.environ.get('CLIENT_ID'),
                             client_secret=os.environ.get('CLIENT_SECRET'),
                             redirect_uri=redirect_uri,
