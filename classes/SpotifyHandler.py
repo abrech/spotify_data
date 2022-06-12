@@ -203,10 +203,10 @@ class SpotifyHandler:
     
     def get_song_info(self):
         _song = self.__spotify.currently_playing()['item']
-        name = _song['name']
-        artist = _song['artists'][0]['name']
+        name = _song['name'].replace("'","")
+        artist = _song['artists'][0]['name'].replace("'","")
         uri = _song['uri']
-        album = _song['album']['name']
+        album = _song['album']['name'].replace("'","")
         popularity = _song['popularity']
         duration = _song['duration_ms']
         img_src = _song['album']['images'][0]['url']

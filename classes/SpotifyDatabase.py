@@ -31,10 +31,14 @@ class SpotifyDatabase:
         return self.__cursor.execute(statement).fetchall()
 
     def add_song(self, song_obj: SongEntry):
-        statement = f"insert into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
-                    f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {1}) " \
-                    f"on conflict(uri) do update set times_played=times_played+1;"
+        #statement = f"insert into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
+        #            f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {1}) " \
+        #            f"on conflict(uri) do update set times_played=times_played+1;"
+        statement = f"insert or ignore into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
+                    f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {0});"
         self.__cursor.execute(statement)
+        update = f"update songs set times_played = times_played + 1 where uri like '{song_obj.uri}';"
+        self.__cursor.execute(update)
 
         epoch_time = int(time.time())
         insert = f"insert into times values('{song_obj.uri}', {epoch_time});"
