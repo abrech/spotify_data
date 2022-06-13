@@ -33,7 +33,7 @@ class Logger:
             pre_content = '[WARN]   - '
         
         content = pre_content + f"{time}: " + content    
-        self.print_log(level, content)
-        self.write_log(level, content)        
+        self.print_log(content, level)
+        self.write_log(content, level)        
     
     
