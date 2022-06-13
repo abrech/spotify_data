@@ -52,8 +52,8 @@ class SpotifyDatabase:
         self.__commit()
         
         if before_res < after_res:
-            log_content = "Added"
-            self.__logger.log(log_content, 0)
+            self.__logger.log("Added "+str(song_obj))
+            
     
     def get_most_played_uris(self, limit):
         statement = f"select uri from songs order by times_played desc;"
