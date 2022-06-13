@@ -23,7 +23,7 @@ class SongCollector:
         
         self.__previous_uri = song_obj.uri
         self.__db.add_song(song_obj)
-        self.__logger(str(song_obj))
+        self.__logger.log(str(song_obj))
     
     def run(self):
         ms = self.__spotify.get_ms()
