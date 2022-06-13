@@ -13,7 +13,10 @@ class SongEvaluator:
     def evaluate_all(self, pl_name, limit):
         most_played = self.get_most_played(limit)
         self.__spotify.set_playlist(most_played, pl_name)
+        self.__logger(f"Set playlist '{pl_name}'")
     
     def evaluate_period(self, pl_name, days, limit):
         most_played = self.__db.get_most_played_in_period(days, limit)
         self.__spotify.set_playlist(most_played, pl_name)
+        self.__logger(f"Set playlist '{pl_name}'")
+        

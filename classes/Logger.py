@@ -24,7 +24,7 @@ class Logger:
             with open(self.__error_log_file, 'a') as error_log:
                 error_log.write(content)
 
-    def log(self, content, level):
+    def log(self, content, level=0):
         time = datetime.now().strftime('%d.%m.%Y %H:%M')
         pre_content = '[LOG]    - '
         if level == 2:

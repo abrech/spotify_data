@@ -36,9 +36,13 @@ class SpotifyDatabase:
         #statement = f"insert into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
         #            f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {1}) " \
         #            f"on conflict(uri) do update set times_played=times_played+1;"
+        res = self.__cursor.execute(f"select uri from songs where uri like '{song_obj.uri}';").fetchall()
+        before_res = len(res)
         statement = f"insert or ignore into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
                     f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {0});"
-        self.__cursor.execute(statement)
+        tmp = self.__cursor.execute(statement)
+        res = self.__cursor.execute(f"select uri from songs where uri like '{song_obj.uri}';").fetchall()
+        after_res = len(res)
         update = f"update songs set times_played = times_played + 1 where uri like '{song_obj.uri}';"
         self.__cursor.execute(update)
 
@@ -46,6 +50,10 @@ class SpotifyDatabase:
         insert = f"insert into times values('{song_obj.uri}', {epoch_time});"
         self.__cursor.execute(insert)
         self.__commit()
+        
+        if before_res < after_res:
+            log_content = "Added"
+            self.__logger.log(log_content, 0)
     
     def get_most_played_uris(self, limit):
         statement = f"select uri from songs order by times_played desc;"

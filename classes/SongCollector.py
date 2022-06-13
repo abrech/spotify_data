@@ -1,3 +1,4 @@
+import requests
 from .Logger import Logger
 from .SpotifyHandler import SpotifyHandler
 from .SpotifyDatabase import SpotifyDatabase
@@ -12,13 +13,17 @@ class SongCollector:
     
     
     def collect(self):
-        song_obj = self.__spotify.get_song_info()
+        try:
+            song_obj = self.__spotify.get_song_info()
+        except requests.exceptions.ReadTimeout as ex:
+            self.__logger.log(ex, level=1)
 
         if not song_obj.uri or song_obj.uri == self.__previous_uri:
             return
         
         self.__previous_uri = song_obj.uri
         self.__db.add_song(song_obj)
+        self.__logger(str(song_obj))
     
     def run(self):
         ms = self.__spotify.get_ms()
