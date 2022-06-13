@@ -16,7 +16,7 @@ class SongCollector:
     def collect(self):
         try:
             song_obj = self.__spotify.get_song_info()
-        except requests.exceptions.ReadTimeout as ex:
+        except requests.exceptions.ReadTimeout:
             self.__logger.log("COLL "+traceback.format_exc(), level=1)
 
         if not song_obj.uri or song_obj.uri == self.__previous_uri:

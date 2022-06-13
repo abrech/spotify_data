@@ -10,6 +10,6 @@ class SongEntry:
         self.img_src = img_src
     
     def __str__(self) -> str:
-        return f"Added {self.song} by {self.artist}"
+        return f"{self.song} by {self.artist}"
     
         
