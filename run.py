@@ -5,12 +5,14 @@ from classes.SpotifyHandler import SpotifyHandler
 from classes.SpotifyDatabase import SpotifyDatabase
 from classes.SongCollector import SongCollector
 from classes.SongEvaluator import SongEvaluator
+from classes.Logger import Logger
 
 
-sp = SpotifyHandler('user-read-private user-read-playback-state user-modify-playback-state user-library-modify playlist-read-private playlist-modify-private playlist-modify-public', 'account.env')
-db = SpotifyDatabase()
-cl = SongCollector(sp, db, 4)
-ev = SongEvaluator(sp, db)
+lg = Logger('spotify.log', 'spotify_error.log')
+sp = SpotifyHandler(lg, 'user-read-private user-read-playback-state user-modify-playback-state user-library-modify playlist-read-private playlist-modify-private playlist-modify-public', 'account.env')
+db = SpotifyDatabase(lg)
+cl = SongCollector(sp, db, lg, 4)
+ev = SongEvaluator(sp, db, lg)
 
 def run_collector():
     cl.run()

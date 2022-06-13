@@ -3,9 +3,11 @@ from .SongEntry import SongEntry
 import time
 import math
 from datetime import datetime, timedelta, timezone
+from .Logger import Logger
 
 class SpotifyDatabase:
-    def __init__(self):
+    def __init__(self, logger: Logger):
+        self.__logger = logger
         self.__connection = sql.connect("spotifysongs.db")
         self.__cursor = self.__get_cursor()
 

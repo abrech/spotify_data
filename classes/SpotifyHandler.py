@@ -3,13 +3,15 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 from dotenv import load_dotenv
 from .SongEntry import SongEntry
+from .Logger import Logger
 
 class InvalidSearchError(Exception):
     pass
 
 
 class SpotifyHandler:
-    def __init__(self, scope, account_info):
+    def __init__(self, logger: Logger, scope, account_info):
+        self.__logger = logger
         self.__device_id = None
         self.__device_name = None
         self.__spotify = None

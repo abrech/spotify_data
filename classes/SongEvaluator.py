@@ -1,6 +1,9 @@
+from .Logger import Logger
+
 
 class SongEvaluator:
-    def __init__(self, sp, db):
+    def __init__(self, sp, db, logger: Logger):
+        self.__logger = logger
         self.__db = db
         self.__spotify = sp
         

@@ -1,8 +1,10 @@
+from .Logger import Logger
 from .SpotifyHandler import SpotifyHandler
 from .SpotifyDatabase import SpotifyDatabase
 
 class SongCollector:
-    def __init__(self, spotify: SpotifyHandler, database: SpotifyDatabase, min_time_played):
+    def __init__(self, spotify: SpotifyHandler, database: SpotifyDatabase, logger: Logger, min_time_played):
+        self.__logger = logger
         self.__spotify = spotify
         self.__db = database
         self.__min_time_played = min_time_played * 1000
