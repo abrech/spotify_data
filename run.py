@@ -29,11 +29,11 @@ schedule.every(4).seconds.do(run_collector)
 schedule.every(120).seconds.do(eval_all)
 schedule.every().day.at("04:00").do(eval_all)
 
-lg.log("Checking database...", 0)
+lg.log("RUN Checking database...", 0)
 songs = db.execute_select("select * from songs;")
 song = str(songs[0]).encode('utf-8')
 lg.log(f"{len(songs)} entries: "+str(song), 0)
-lg.log("Check successful.", 0)
+lg.log("RUN Check successful.", 0)
 
 # checks pending schedules
 while True:
@@ -41,6 +41,6 @@ while True:
     try:
         schedule.run_pending()
     except Exception as ex:
-        lg.log(traceback.format_exc(), 2)
+        lg.log("RUN "+traceback.format_exc(), 2)
         raise
 

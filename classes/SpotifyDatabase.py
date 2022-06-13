@@ -52,7 +52,7 @@ class SpotifyDatabase:
         self.__commit()
         
         if before_res < after_res:
-            self.__logger.log("Added "+str(song_obj))
+            self.__logger.log("DB Added "+str(song_obj))
             
     
     def get_most_played_uris(self, limit):
