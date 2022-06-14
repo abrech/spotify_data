@@ -15,7 +15,7 @@ from classes.Logger import Logger
 lg = Logger('spotify.log', 'spotify_error.log')
 sp = SpotifyHandler(lg, 'user-read-private user-read-playback-state user-modify-playback-state user-library-modify playlist-read-private playlist-modify-private playlist-modify-public', 'account.env')
 db = SpotifyDatabase(lg)
-cl = SongCollector(sp, db, lg, 20)
+cl = SongCollector(sp, db, lg, 40)
 ev = SongEvaluator(sp, db, lg)
 
 def run_collector():
@@ -55,9 +55,9 @@ print(db.execute_select("select * from artists_genres;"))
 
 #"""
 sched = BackgroundScheduler(daemon=True)
-# sched.add_job(eval_all,'cron', hour='2', minute='30')
-sched.add_job(run_collector,'interval', seconds=5)
-sched.add_job(eval_all,'interval', seconds=20)
+sched.add_job(eval_all,'cron', hour='2', minute='30')
+sched.add_job(run_collector,'interval', seconds=40)
+# sched.add_job(eval_all,'interval', seconds=20)
 sched.start()
 
 app = Flask(__name__)
@@ -65,8 +65,7 @@ app = Flask(__name__)
 @app.route("/home")
 def home():
     """ Function for test purposes. """
-    global gl
-    gl += 1
+
     return "Welcome Home :) !"
 
 # Shut down the scheduler when exiting the app
