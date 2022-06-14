@@ -227,6 +227,7 @@ class SpotifyHandler:
         
         return ArtistEntry(name, uri, popularity, genres)
         
+        
     def get_song_info(self):
         _song = self.__spotify.currently_playing()['item']
         name = _song['name'].replace("'","")

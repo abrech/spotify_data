@@ -67,9 +67,14 @@ class SpotifyDatabase:
         if artist_count > 0:
             self.__commit()
             return
+        
+        artist_log = f"DB Added {str(artist_obj)}, genres"
         for genre in artist_obj.genres:
             insert_genre = f"insert into artists_genres values('{artist_obj.uri}', '{genre}');"
             self.__cursor.execute(insert_genre)
+            artist_log += f" - {genre}"
+        artist_obj = artist_obj + ": Empty" if len(artist_obj.genres) < 1 else artist_obj
+        self.__logger.log(artist_log, 0)
         self.__commit()
     
     def get_most_played_uris(self, limit):
