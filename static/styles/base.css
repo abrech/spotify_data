@@ -10,6 +10,7 @@ body{
     color: antiquewhite;
     height: 100%;
     width: 100%;
+    font-family: "Courier New", monospace;
 }
 
 a:link, a:visited{
