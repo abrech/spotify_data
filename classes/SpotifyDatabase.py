@@ -10,7 +10,7 @@ from .Logger import Logger
 class SpotifyDatabase:
     def __init__(self, logger: Logger):
         self.__logger = logger
-        self.__connection = sql.connect("spotifysongs.db")
+        self.__connection = sql.connect("spotifysongs.db", check_same_thread=False)
         self.__cursor = self.__get_cursor()
 
         tables = self.__cursor.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
@@ -107,7 +107,7 @@ class SpotifyDatabase:
         return out
     
     def get_most_played_by_song_popularity(self, min_popularity, max_popularity, limit):
-        statement = f"select uri from songs where popularity <= {max_popularity} and popularity >= {min_popularity} order by times_played desc;"
+        statement = f"select * from songs where popularity <= {max_popularity} and popularity >= {min_popularity} order by times_played desc;"
         uris = self.__cursor.execute(statement).fetchall()
         uris_limited = uris[:limit]
         out = [uri[0] for uri in uris_limited]

@@ -2,6 +2,9 @@ import schedule
 import time
 import traceback
 from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask
+import atexit
 from classes.SpotifyHandler import SpotifyHandler
 from classes.SpotifyDatabase import SpotifyDatabase
 from classes.SongCollector import SongCollector
@@ -33,9 +36,9 @@ def eval_all(recursive_count=0):
 def eval_period():
     ev.evaluate_period('4week', 28, 30)
 
-schedule.every(4).seconds.do(run_collector)
-schedule.every(20).seconds.do(eval_all)
-schedule.every().day.at("04:00").do(eval_all)
+# schedule.every(4).seconds.do(run_collector)
+# schedule.every(20).seconds.do(eval_all)
+# schedule.every().day.at("04:00").do(eval_all)
 
 print(sp.get_song())
 res = db.execute_select("select * from songs;")
@@ -52,6 +55,28 @@ lg.log("RUN Check successful.", 0)
 print(db.execute_select("select * from artists;"))
 print(db.execute_select("select * from artists_genres;"))
 
+#"""
+sched = BackgroundScheduler(daemon=True)
+# sched.add_job(eval_all,'cron', hour='2', minute='30')
+sched.add_job(run_collector,'interval', seconds=5)
+sched.add_job(eval_all,'interval', seconds=20)
+sched.start()
+
+app = Flask(__name__)
+
+@app.route("/home")
+def home():
+    """ Function for test purposes. """
+    global gl
+    gl += 1
+    return "Welcome Home :) !"
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: sched.shutdown())
+
+if __name__ == "__main__":
+    app.run()
+"""
 # checks pending schedules
 while True:
     time.sleep(1)
@@ -62,4 +87,5 @@ while True:
     except Exception as ex:
         lg.log("RUN "+traceback.format_exc(), 2)
         raise
+"""
 
