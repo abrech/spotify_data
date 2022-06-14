@@ -1,9 +1,10 @@
 
 class SongEntry:
-    def __init__(self, song, artist, uri, album, popularity, duration, img_src):
+    def __init__(self, song, artist, uri, artist_uri, album, popularity, duration, img_src):
         self.song = song
         self.artist = artist
         self.uri = uri
+        self.artist_uri = artist_uri
         self.album = album
         self.popularity = popularity
         self.duration = duration

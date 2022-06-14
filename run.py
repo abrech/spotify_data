@@ -32,15 +32,20 @@ def eval_all(recursive_count=0):
 def eval_period():
     ev.evaluate_period('4week', 28, 30)
 
-schedule.every(20).seconds.do(run_collector)
-schedule.every(1200).seconds.do(eval_all)
+schedule.every(4).seconds.do(run_collector)
+schedule.every(20).seconds.do(eval_all)
 schedule.every().day.at("04:00").do(eval_all)
 
+# uri = sp.get_song()['artists'][0]['uri']
+# sp.get_artist_info(uri)
 lg.log("RUN Checking database...", 0)
 songs = db.execute_select("select * from songs;")
 song = str(songs[0]).encode('utf-8') if len(songs) > 0 else "Empty"
 lg.log(f"RUN {len(songs)} entries: "+str(song), 0)
 lg.log("RUN Check successful.", 0)
+
+print(db.execute_select("select * from artists;"))
+print(db.execute_select("select * from artists_genres;"))
 
 # checks pending schedules
 while True:

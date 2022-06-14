@@ -1,4 +1,6 @@
 import sqlite3 as sql
+
+from .ArtistEntry import ArtistEntry
 from .SongEntry import SongEntry
 import time
 import math
@@ -27,7 +29,9 @@ class SpotifyDatabase:
         self.__cursor.execute("CREATE TABLE songs "
                               "(uri TEXT not null primary key, song TEXT, artist TEXT, "
                               "album TEXT, popularity INTEGER, duration INTEGER, img_src TEXT, times_played INTEGER);")
-        self.__cursor.execute("create table times (song_uri TEXT, datetime INTEGER);")
+        self.__cursor.execute("create table songs_times (song_uri TEXT, datetime INTEGER);")
+        self.__cursor.execute("create table artists (artist_uri TEXT not null primary key, name TEXT, popularity INTEGER);")
+        self.__cursor.execute("create table artists_genres (artist_uri TEXT, genre TEXT);")
 
     def execute_select(self, statement):
         return self.__cursor.execute(statement).fetchall()
@@ -40,20 +44,33 @@ class SpotifyDatabase:
         before_res = len(res)
         statement = f"insert or ignore into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
                     f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {0});"
-        tmp = self.__cursor.execute(statement)
+        self.__cursor.execute(statement)
         res = self.__cursor.execute(f"select uri from songs where uri like '{song_obj.uri}';").fetchall()
         after_res = len(res)
         update = f"update songs set times_played = times_played + 1 where uri like '{song_obj.uri}';"
         self.__cursor.execute(update)
 
         epoch_time = int(time.time())
-        insert = f"insert into times values('{song_obj.uri}', {epoch_time});"
+        insert = f"insert into songs_times values('{song_obj.uri}', {epoch_time});"
         self.__cursor.execute(insert)
         self.__commit()
         
         if before_res < after_res:
             self.__logger.log("DB Added "+str(song_obj))
-            
+    
+    def add_artist(self, artist_obj: ArtistEntry):
+        statement = f"insert or ignore into artists values('{artist_obj.uri}', '{artist_obj.name}', {artist_obj.popularity});"
+        self.__cursor.execute(statement)
+        artist_in_genres = self.__cursor.execute(f"select count(artist_uri) from artists_genres where artist_uri like '{artist_obj.uri}';").fetchall()
+        artist_count = artist_in_genres[0][0]
+        
+        if artist_count > 0:
+            self.__commit()
+            return
+        for genre in artist_obj.genres:
+            insert_genre = f"insert into artists_genres values('{artist_obj.uri}', '{genre}');"
+            self.__cursor.execute(insert_genre)
+        self.__commit()
     
     def get_most_played_uris(self, limit):
         statement = f"select uri from songs order by times_played desc;"
@@ -64,7 +81,7 @@ class SpotifyDatabase:
     
     def get_most_played_in_period(self, days, limit):
         time_start = math.floor((datetime.now(timezone.utc) - timedelta(days)).timestamp())
-        statement = f"select s.uri, count(t.song_uri) as times from songs s join times t on s.uri = t.song_uri where t.datetime > {time_start} group by s.uri order by times desc;"
+        statement = f"select s.uri, count(t.song_uri) as times from songs s join songs_times t on s.uri = t.song_uri where t.datetime > {time_start} group by s.uri order by times desc;"
         uris = self.__cursor.execute(statement).fetchall()
         uris_limited = uris[:limit]
         out = [uri[0] for uri in uris_limited]

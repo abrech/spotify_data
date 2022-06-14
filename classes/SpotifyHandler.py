@@ -3,6 +3,7 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 from dotenv import load_dotenv
 from .SongEntry import SongEntry
+from .ArtistEntry import ArtistEntry
 from .Logger import Logger
 
 class InvalidSearchError(Exception):
@@ -52,6 +53,20 @@ class SpotifyHandler:
             if d['name'] == os.environ.get("ALT_DEVICE_NAME_2"):
                 self.deviceID = d['id']
                 return
+            
+    def create_playlist(self, user, name, public=False, description=""):
+        self.__spotify.user_playlist_create(user=user, name=name, public=public, description=description)
+    
+    def get_playlists(self, user):
+        playlists = []
+        res = self.__spotify.user_playlists(user=user)
+        playlists += res['items']
+        offset = 0
+        while res and len(res['items']) >= 50:
+            offset += 50
+            res = self.__spotify.user_playlists(user=user, offset=offset)
+            playlists += res['items']
+        return playlists
 
     def update_device(self):
         self.__set_device_id()
@@ -203,16 +218,27 @@ class SpotifyHandler:
         return self.__spotify.currently_playing()['item']
     
     
+    def get_artist_info(self, uri):
+        _artist = self.__spotify.artist(uri)
+        name = _artist['name'].replace("'","")
+        uri = _artist['uri']
+        popularity = _artist['popularity']
+        genres = _artist['genres']
+        
+        return ArtistEntry(name, uri, popularity, genres)
+        
     def get_song_info(self):
         _song = self.__spotify.currently_playing()['item']
         name = _song['name'].replace("'","")
         artist = _song['artists'][0]['name'].replace("'","")
         uri = _song['uri']
+        artist_uri = _song['artists'][0]['uri']
         album = _song['album']['name'].replace("'","")
         popularity = _song['popularity']
         duration = _song['duration_ms']
         img_src = _song['album']['images'][0]['url']
-        return SongEntry(name, artist, uri, album, popularity, duration, img_src)
+
+        return SongEntry(name, artist, uri, artist_uri, album, popularity, duration, img_src)
 
 
     def play_saved(self):

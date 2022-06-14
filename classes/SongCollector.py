@@ -16,6 +16,7 @@ class SongCollector:
     def collect(self):
         try:
             song_obj = self.__spotify.get_song_info()
+            artist_obj = self.__spotify.get_artist_info(song_obj.artist_uri)
         except requests.exceptions.ReadTimeout:
             self.__logger.log("COLL "+traceback.format_exc(), level=1)
 
@@ -23,6 +24,8 @@ class SongCollector:
             return
         
         self.__previous_uri = song_obj.uri
+        
+        self.__db.add_artist(artist_obj)
         self.__db.add_song(song_obj)
     
     def run(self):
