@@ -15,10 +15,12 @@ from classes.Logger import Logger
 lg = Logger('spotify.log', 'spotify_error.log')
 sp = SpotifyHandler(lg, 'user-read-private user-read-playback-state user-modify-playback-state user-library-modify playlist-read-private playlist-modify-private playlist-modify-public', 'account.env')
 db = SpotifyDatabase(lg)
-cl = SongCollector(sp, db, lg, 40)
+cl = SongCollector(sp, db, lg, 10)
 ev = SongEvaluator(sp, db, lg)
-
+tmp = 0
 def run_collector():
+    global tmp
+    print("running"+str(tmp))
     cl.run()
 
 def eval_all(recursive_count=0):
@@ -49,7 +51,7 @@ lg.log("RUN Check successful.", 0)
 #"""
 sched = BackgroundScheduler(daemon=True)
 sched.add_job(eval_all,'cron', hour='2', minute='30')
-sched.add_job(run_collector,'interval', seconds=40)
+sched.add_job(run_collector,'interval', seconds=10)
 # sched.add_job(eval_all,'interval', seconds=20)
 sched.start()
 
@@ -70,7 +72,7 @@ def config():
 atexit.register(lambda: sched.shutdown())
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=6400, debug=True)
+    app.run(host='0.0.0.0', port=6400, use_reloader=False)
 """
 # checks pending schedules
 while True:

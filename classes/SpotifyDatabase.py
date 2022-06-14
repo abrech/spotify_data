@@ -40,7 +40,9 @@ class SpotifyDatabase:
         #statement = f"insert into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
         #            f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {1}) " \
         #            f"on conflict(uri) do update set times_played=times_played+1;"
+        print(song_obj)
         res = self.__cursor.execute(f"select uri from songs where uri like '{song_obj.uri}';").fetchall()
+        print(res)
         before_res = len(res)
         statement = f"insert or ignore into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.artist_uri}', '{song_obj.album}'," \
                     f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {0});"
