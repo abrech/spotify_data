@@ -3,7 +3,7 @@ import time
 import traceback
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask
+from flask import Flask, render_template
 import atexit
 from classes.SpotifyHandler import SpotifyHandler
 from classes.SpotifyDatabase import SpotifyDatabase
@@ -40,18 +40,11 @@ def eval_period():
 # schedule.every(20).seconds.do(eval_all)
 # schedule.every().day.at("04:00").do(eval_all)
 
-res = db.execute_select("select * from songs;")
-for r in res:
-    print(r)
-
 lg.log("RUN Checking database...", 0)
 songs = db.execute_select("select * from songs;")
 song = str(songs[0]).encode('utf-8') if len(songs) > 0 else "Empty"
 lg.log(f"RUN {len(songs)} entries: "+str(song), 0)
 lg.log("RUN Check successful.", 0)
-
-print(db.execute_select("select * from artists;"))
-print(db.execute_select("select * from artists_genres;"))
 
 #"""
 sched = BackgroundScheduler(daemon=True)
@@ -62,17 +55,18 @@ sched.start()
 
 app = Flask(__name__)
 
-@app.route("/home")
+@app.route("/")
 def home():
-    """ Function for test purposes. """
+    global db
+    top_songs = db.execute_select("select * from songs order by times_played desc;")
 
-    return "Welcome Home :) !"
+    return render_template("base.html", top_songs=top_songs, enumerate=enumerate)
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: sched.shutdown())
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=6400)
+    app.run(host='0.0.0.0', port=6400, debug=True)
 """
 # checks pending schedules
 while True:

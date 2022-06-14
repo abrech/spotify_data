@@ -1,0 +1,24 @@
+body{
+    background-color: rgb(32, 32, 32);
+    padding: 0;
+    margin: 0;
+}
+
+.nav-div{
+    color: antiquewhite;
+    margin: 12px;
+}
+
+.header-nav{
+    display: flex;
+    background-color: rgb(16, 16, 16)
+}
+
+.header-nav-span{
+    font-size: x-large;
+}
+
+.top-wrapper{
+    margin-left: 15%;
+    margin-right: 15%;
+}
