@@ -27,7 +27,7 @@ class SpotifyDatabase:
 
     def __create_tables(self):
         self.__cursor.execute("CREATE TABLE songs "
-                              "(uri TEXT not null primary key, song TEXT, artist TEXT, "
+                              "(uri TEXT not null primary key, song TEXT, artist TEXT, artist_uri TEXT, "
                               "album TEXT, popularity INTEGER, duration INTEGER, img_src TEXT, times_played INTEGER);")
         self.__cursor.execute("create table songs_times (song_uri TEXT, datetime INTEGER);")
         self.__cursor.execute("create table artists (artist_uri TEXT not null primary key, name TEXT, popularity INTEGER);")
@@ -42,7 +42,7 @@ class SpotifyDatabase:
         #            f"on conflict(uri) do update set times_played=times_played+1;"
         res = self.__cursor.execute(f"select uri from songs where uri like '{song_obj.uri}';").fetchall()
         before_res = len(res)
-        statement = f"insert or ignore into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.album}'," \
+        statement = f"insert or ignore into songs values ('{song_obj.uri}', '{song_obj.song}', '{song_obj.artist}', '{song_obj.artist_uri}', '{song_obj.album}'," \
                     f"{song_obj.popularity}, {song_obj.duration}, '{song_obj.img_src}', {0});"
         self.__cursor.execute(statement)
         res = self.__cursor.execute(f"select uri from songs where uri like '{song_obj.uri}';").fetchall()
@@ -73,7 +73,7 @@ class SpotifyDatabase:
             insert_genre = f"insert into artists_genres values('{artist_obj.uri}', '{genre}');"
             self.__cursor.execute(insert_genre)
             artist_log += f" - {genre}"
-        artist_obj = artist_obj + ": Empty" if len(artist_obj.genres) < 1 else artist_obj
+        artist_obj = str(artist_obj) + ": Empty" if len(artist_obj.genres) < 1 else artist_obj
         self.__logger.log(artist_log, 0)
         self.__commit()
     
@@ -91,3 +91,25 @@ class SpotifyDatabase:
         uris_limited = uris[:limit]
         out = [uri[0] for uri in uris_limited]
         return out
+
+    def get_most_played_by_genres(self, genres: list, limit):
+        if len(genres) < 1:
+            return self.get_most_played_uris(limit)
+        
+        genre_str = f"genre like '{genres[:1][0]}'"
+        for genre in genres[1:]:
+            genre_str += f" or genre like '{genre}'"
+        print(genre_str)
+        statement = f"select distinct s.uri from songs s join artists_genres g on s.artist_uri = g.artist_uri where {genre_str} order by s.times_played desc;"
+        uris = self.__cursor.execute(statement).fetchall()
+        uris_limited = uris[:limit]
+        out = [uri[0] for uri in uris_limited]
+        return out
+    
+    def get_most_played_by_song_popularity(self, min_popularity, max_popularity, limit):
+        statement = f"select uri from songs where popularity <= {max_popularity} and popularity >= {min_popularity} order by times_played desc;"
+        uris = self.__cursor.execute(statement).fetchall()
+        uris_limited = uris[:limit]
+        out = [uri[0] for uri in uris_limited]
+        return out
+        

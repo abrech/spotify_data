@@ -20,8 +20,9 @@ def run_collector():
 
 def eval_all(recursive_count=0):
     try:
-        ev.evaluate_all('all', 30)
-        eval_period()
+        # ev.evaluate_all('all', 30)
+        # ev.evaluate_genres('all', ['pop', 'dance pop'], 30)
+        ev.evaluate_popularity_songs('all', 1, 1000, 30)
     except TimeoutError:
         lg.log("RUN "+traceback.format_exc(), 1)
         time.sleep(30)
@@ -36,7 +37,12 @@ schedule.every(4).seconds.do(run_collector)
 schedule.every(20).seconds.do(eval_all)
 schedule.every().day.at("04:00").do(eval_all)
 
-# uri = sp.get_song()['artists'][0]['uri']
+print(sp.get_song())
+res = db.execute_select("select * from songs;")
+for r in res:
+    print(r)
+
+uri = sp.get_song()['artists'][0]['uri']
 lg.log("RUN Checking database...", 0)
 songs = db.execute_select("select * from songs;")
 song = str(songs[0]).encode('utf-8') if len(songs) > 0 else "Empty"
