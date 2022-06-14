@@ -40,12 +40,10 @@ def eval_period():
 # schedule.every(20).seconds.do(eval_all)
 # schedule.every().day.at("04:00").do(eval_all)
 
-print(sp.get_song())
 res = db.execute_select("select * from songs;")
 for r in res:
     print(r)
 
-uri = sp.get_song()['artists'][0]['uri']
 lg.log("RUN Checking database...", 0)
 songs = db.execute_select("select * from songs;")
 song = str(songs[0]).encode('utf-8') if len(songs) > 0 else "Empty"
