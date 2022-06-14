@@ -20,7 +20,6 @@ ev = SongEvaluator(sp, db, lg)
 tmp = 0
 def run_collector():
     global tmp
-    print("running"+str(tmp))
     cl.run()
 
 def eval_all(recursive_count=0):
