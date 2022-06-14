@@ -55,12 +55,16 @@ sched.start()
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
+@app.route("/topsongs")
+def topsongs():
     global db
     top_songs = db.execute_select("select * from songs order by times_played desc;")
 
-    return render_template("base.html", top_songs=top_songs, enumerate=enumerate)
+    return render_template("topsongs.html", top_songs=top_songs, enumerate=enumerate)
+
+@app.route("/config")
+def config():
+    return render_template("config.html")
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: sched.shutdown())

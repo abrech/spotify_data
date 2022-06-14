@@ -19,10 +19,10 @@ class Logger:
     
     def write_log(self, content, level):
         with open(self.__log_file, 'a') as log_file:
-            log_file.write(content)
+            log_file.write(content+"\n")
         if level == 2:
             with open(self.__error_log_file, 'a') as error_log:
-                error_log.write(content)
+                error_log.write(content+"\n")
 
     def log(self, content, level=0):
         time = datetime.now().strftime('%d.%m.%Y %H:%M')

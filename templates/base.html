@@ -11,24 +11,13 @@
   <body>
     <nav class="header-nav">
         <div class="nav-div">
-            <span class="header-nav-span" {% if "/" in request.path %}style="text-decoration:underline"{% endif %}>Top songs</span>
+            <a href="/topsongs" class="header-nav-span" {% if "topsongs" in request.path %}style="color: antiquewhite;"{% endif %}>Top songs</a>
         </div>
         <div class="nav-div">
-            <span class="header-nav-span">Configuration</span>
+            <a href="/config" class="header-nav-span" {% if "config" in request.path %}style="color: antiquewhite;"{% endif %}>Configuration</a>
         </div>
     </nav>
-    <div class="top-wrapper">
-        {%for entry in top_songs%}
-        <p>
-            {%for i, column in enumerate(entry)%}
-                {%if i == 0%}
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/{{column.split(':')[-1]}}" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-                {%endif%}
-
-            {%endfor%}
-        </p>
-        {%endfor%}
-    </div>
+    {%block content%}{%endblock%}
     <script
       type="text/javascript"
       src="{{url_for('static', filename='index.js')}}"

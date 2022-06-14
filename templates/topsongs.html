@@ -1,0 +1,23 @@
+{%extends "base.html"%}
+{% block head %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='styles/topsongs.css') }}"
+/>
+{% endblock %} 
+{%block content%}
+<div class="top-wrapper">
+    <div style="height: 250px;">
+        <input type="text">
+    </div>
+
+    {%for i, entry in enumerate(top_songs)%}
+    <p class="top-p">
+        <span class="grid-place">{{i+1}}</span>
+        <iframe class="grid-song" style="border-radius:12px" src="https://open.spotify.com/embed/track/{{entry[0].split(':')[-1]}}?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        <span class="grid-timesplayed">{{entry[-1]}}</span>
+    </p>
+    {%endfor%}
+</div>
+{%endblock%}

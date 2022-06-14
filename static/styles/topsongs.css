@@ -1,0 +1,46 @@
+.top-wrapper{
+    margin-left: 15%;
+    margin-right: 15%;
+    border: solid 2px rgb(16, 16, 16);
+    border-radius: 12px;
+    height: calc(100% - 92px);
+    margin-top: 12px;
+    overflow: auto;
+}
+
+.top-wrapper::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+/* Track */
+.top-wrapper::-webkit-scrollbar-track {
+    background: rgb(32, 32, 32);
+    border-radius: 12px;
+}
+  
+/* Handle */
+.top-wrapper::-webkit-scrollbar-thumb {
+    background: rgb(16, 16, 16);
+    border-radius: 12px;
+}
+  
+/* Handle on hover */
+.top-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgb(146, 146, 146);
+}
+
+.top-p{
+    display: grid;
+}
+
+.grid-place{
+    grid-column: 1;
+}
+
+.grid-song{
+    grid-column: 2 / 4;
+}
+
+.grid-timesplayed{
+    grid-column: 4;
+}
