@@ -4,6 +4,7 @@ import traceback
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template
+from flask_cors import CORS
 import atexit
 import json
 from classes.SpotifyHandler import SpotifyHandler
@@ -55,7 +56,9 @@ sched.add_job(run_collector,'interval', seconds=10)
 # sched.add_job(eval_all,'interval', seconds=20)
 sched.start()
 
+
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/test")
