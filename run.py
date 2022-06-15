@@ -5,6 +5,7 @@ from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template
 import atexit
+import json
 from classes.SpotifyHandler import SpotifyHandler
 from classes.SpotifyDatabase import SpotifyDatabase
 from classes.SongCollector import SongCollector
@@ -56,16 +57,10 @@ sched.start()
 
 app = Flask(__name__)
 
-@app.route("/topsongs")
-def topsongs():
-    global db
-    top_songs = db.execute_select("select * from songs order by times_played desc;")
 
-    return render_template("topsongs.html", top_songs=top_songs, enumerate=enumerate)
-
-@app.route("/config")
-def config():
-    return render_template("config.html")
+@app.route("/test")
+def test():
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: sched.shutdown())
