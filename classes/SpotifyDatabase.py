@@ -118,4 +118,10 @@ class SpotifyDatabase:
         uris_limited = uris[:limit]
         out = [uri[0] for uri in uris_limited]
         return out
+    
+    def get_genres(self):
+        statement = f"select distinct genre from artists_genres;"
+        genres = self.__cursor.execute(statement).fetchall()
+        out = [genre[0] for genre in genres]
+        return out
         
