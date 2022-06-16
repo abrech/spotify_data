@@ -65,7 +65,7 @@ CORS(app)
 def test():
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
-@app.route("/get_top/<limit>")
+@app.route("/get_top_uris/<limit>")
 def get_top_uris(limit):
     limit = int(limit)
     return json.dumps({'uris': db.get_most_played_uris(30)}), 200, {'ContentType': 'application/json'}
