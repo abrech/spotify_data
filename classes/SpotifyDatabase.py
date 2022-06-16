@@ -84,6 +84,12 @@ class SpotifyDatabase:
         out = [uri[0] for uri in uris_limited]
         return out
     
+    def get_most_played_songs(self, limit: int):
+        statement = f"select * from songs order by times_played desc;"
+        uris = self.__cursor.execute(statement).fetchall()
+        out = uris[:limit]
+        return out
+    
     def get_most_played_in_period(self, days, limit):
         time_start = math.floor((datetime.now(timezone.utc) - timedelta(days)).timestamp())
         statement = f"select s.uri, count(t.song_uri) as times from songs s join songs_times t on s.uri = t.song_uri where t.datetime > {time_start} group by s.uri order by times desc;"
