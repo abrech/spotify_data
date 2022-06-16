@@ -68,7 +68,7 @@ def test():
 @app.route("/get_top/<limit>")
 def get_top_uris(limit):
     limit = int(limit)
-    return db.get_most_played_uris(30)
+    return json.dumps({'uris': db.get_most_played_uris(30)}), 200, {'ContentType': 'application/json'}
     
 
 # Shut down the scheduler when exiting the app
