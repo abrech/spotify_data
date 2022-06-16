@@ -77,7 +77,7 @@ class SpotifyDatabase:
         self.__logger.log(artist_log, 0)
         self.__commit()
     
-    def get_most_played_uris(self, limit):
+    def get_most_played_uris(self, limit: int):
         statement = f"select uri from songs order by times_played desc;"
         uris = self.__cursor.execute(statement).fetchall()
         uris_limited = uris[:limit]

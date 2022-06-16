@@ -65,6 +65,12 @@ CORS(app)
 def test():
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
+@app.route("/get_top/<limit>")
+def get_top_uris(limit):
+    limit = int(limit)
+    return db.get_most_played_uris(30)
+    
+
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: sched.shutdown())
 
