@@ -3,7 +3,7 @@ import time
 import traceback
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_cors import CORS
 import atexit
 import json
@@ -77,9 +77,16 @@ def get_top_songs(limit):
 
 @app.route("/get_genres")
 def get_genres():
-    return json.dumps({'genres': db.get_genres()}), 200, {'ContentType': 'application/json'}
+    genres = db.get_genres()
+    genres.sort()
+    return json.dumps({'genres': genres}), 200, {'ContentType': 'application/json'}
     
-
+@app.route("/get_songs_by_genres")
+def get_songs_by_genres():
+    args = request.args
+    genres = args.get('genres')
+    return json.dumps({'songs': db.get_most_played_by_genres(genres, 30)}), 200, {'ContentType': 'application/json'}
+    
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: sched.shutdown())
 
