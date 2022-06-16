@@ -84,7 +84,7 @@ def get_genres():
 @app.route("/get_songs_by_genres")
 def get_songs_by_genres():
     args = request.args
-    genres = args.get('genres')
+    genres = args.get('genres').split(" ")
     return json.dumps({'songs': db.get_most_played_by_genres(genres, 30)}), 200, {'ContentType': 'application/json'}
     
 # Shut down the scheduler when exiting the app
