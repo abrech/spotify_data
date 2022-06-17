@@ -62,12 +62,12 @@ CORS(app)
 
 @app.route("/")
 def arduino():
-    return json.dumps({'success': False}), 200, {'ContentType': 'application/json'}
+    return "Hallotest"
 
 
 @app.route("/test")
 def test():
-    return json.dumps("test"), 200, {'ContentType': 'application/json'}
+    return "Hallotest"
 
 @app.route("/get_top_uris/<limit>")
 def get_top_uris(limit):
