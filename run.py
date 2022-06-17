@@ -60,10 +60,14 @@ sched.start()
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/")
+def arduino():
+    return json.dumps({'success': False}), 200, {'ContentType': 'application/json'}
+
 
 @app.route("/test")
 def test():
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    return json.dumps("test"), 200, {'ContentType': 'application/json'}
 
 @app.route("/get_top_uris/<limit>")
 def get_top_uris(limit):

@@ -106,12 +106,12 @@ class SpotifyDatabase:
         for genre in genres[1:]:
             genre_str += f" or genre like '{genre}'"
         print(genre_str)
-        statement = f"select distinct s.uri from songs s join artists_genres g on s.artist_uri = g.artist_uri where {genre_str} order by s.times_played desc;"
+        statement = f"select distinct s.uri, s.song, s.artist, s.artist_uri, s.album, s.popularity, s.duration, s.img_src, s.times_played from songs s join artists_genres g on s.artist_uri = g.artist_uri where {genre_str} order by s.times_played desc;"
         uris = self.__cursor.execute(statement).fetchall()
         uris_limited = uris[:limit]
         out = [uri[0] for uri in uris_limited]
         return out
-    
+
     def get_most_played_by_song_popularity(self, min_popularity, max_popularity, limit):
         statement = f"select * from songs where popularity <= {max_popularity} and popularity >= {min_popularity} order by times_played desc;"
         uris = self.__cursor.execute(statement).fetchall()
