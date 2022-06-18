@@ -120,7 +120,7 @@ def get_temp(apikey, city):
         temp = data['main']['temp']
         max_temp = data['main']['temp_max']
 
-        return f"Temp {round(temp)}° Max {max_temp}°\n{desc}"
+        return f"Temp {round(temp)}C Max {round(max_temp)}C\n{desc}"
     return "ERROR"
 
 # end
