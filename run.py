@@ -75,6 +75,7 @@ def test():
 # arduino stuff
 @app.route("/discord/set/<count>")
 def set_discord_count(count):
+    print(request.remote_addr)
     if request.remote_addr == home_ip:
         global dc_count
         dc_count = int(count)
@@ -88,11 +89,10 @@ def get_discord_count():
 @app.route("/spotify/playing")
 def get_spotify_playing():
     try:
-        if request.remote_addr == home_ip:
-            _song = sp.currently_playing()
-            name = _song['name']
-            artist = _song['artists'][0]['name']
-            return f"{name} by {artist}"
+        _song = sp.currently_playing()
+        name = _song['name']
+        artist = _song['artists'][0]['name']
+        return f"{name} by {artist}"
     except:
         return "ERROR"
 
