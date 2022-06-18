@@ -1,5 +1,7 @@
 import schedule
 import time
+import math
+import requests
 import traceback
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -102,6 +104,24 @@ def get_top_single():
     song = songs[0][1]
     played = songs[0][-1]
     return f"{song} x{played}"
+
+@app.route("/weather/temp/<apikey>/<city>")
+def get_temp(apikey, city):
+    BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
+    CITY = city
+    API_KEY = apikey
+    URL = BASE_URL + "q=" + CITY + "&appid=" + API_KEY + "&units=metric"
+    response = requests.get(URL)
+    # checking the status code of the request
+    if response.status_code == 200:
+        # getting data in the json format
+        data = response.json()
+        desc = data['weather'][0]['description']
+        temp = data['main']['temp']
+        max_temp = data['main']['temp_max']
+
+        return f"Temp {math.round(temp)}° Max {max_temp}°\n{desc}"
+    return "ERROR"
 
 # end
 

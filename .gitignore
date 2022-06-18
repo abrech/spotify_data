@@ -134,3 +134,4 @@ account.env
 *.db
 .idea/
 ztest.py
+ztest.json
