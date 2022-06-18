@@ -84,7 +84,7 @@ def set_discord_count(count):
 @app.route("/discord/get")
 def get_discord_count():
     global dc_count
-    return dc_count
+    return str(dc_count)
 
 @app.route("/spotify/playing")
 def get_spotify_playing():
@@ -95,8 +95,6 @@ def get_spotify_playing():
         return f"{name} by {artist}"
     except:
         return "ERROR"
-
-    return "ERROR"
 
 @app.route("/spotify/top")
 def get_top_single():
