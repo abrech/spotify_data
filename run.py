@@ -21,7 +21,6 @@ cl = SongCollector(sp, db, lg, 10)
 ev = SongEvaluator(sp, db, lg)
 tmp = 0
 
-home_ip = "216.31.91.151"
 dc_count = 0
 def run_collector():
     global tmp
@@ -75,11 +74,12 @@ def test():
 # arduino stuff
 @app.route("/discord/set/<count>")
 def set_discord_count(count):
-    print(request.remote_addr)
-    if request.remote_addr == home_ip:
+    if count[:3] == "___":
+        count = count[3:]
         global dc_count
         dc_count = int(count)
         return "OK", 200
+    return "ERROR"
 
 @app.route("/discord/get")
 def get_discord_count():
