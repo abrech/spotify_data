@@ -72,6 +72,12 @@ class SpotifyHandler:
         self.__set_device_id()
 
 
+    def currently_playing(self):
+        _song = self.__spotify.currently_playing()['item']
+        return _song
+
+
+
     def get_track_artist(self):
         try:
             return self.get_song()['artists'][0]['name']

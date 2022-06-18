@@ -133,3 +133,4 @@ dmypy.json
 account.env
 *.db
 .idea/
+ztest.py

@@ -20,6 +20,9 @@ db = SpotifyDatabase(lg)
 cl = SongCollector(sp, db, lg, 10)
 ev = SongEvaluator(sp, db, lg)
 tmp = 0
+
+home_ip = "216.31.91.151"
+dc_count = 0
 def run_collector():
     global tmp
     cl.run()
@@ -68,6 +71,41 @@ def arduino():
 @app.route("/test")
 def test():
     return "Hallotest"
+
+# arduino stuff
+@app.route("/discord/set/<count>")
+def set_discord_count(count):
+    if request.remote_addr == home_ip:
+        global dc_count
+        dc_count = int(count)
+        return "OK", 200
+
+@app.route("/discord/get")
+def get_discord_count():
+    global dc_count
+    return dc_count
+
+@app.route("/spotify/playing")
+def get_spotify_playing():
+    try:
+        if request.remote_addr == home_ip:
+            _song = sp.currently_playing()
+            name = _song['name']
+            artist = _song['artists'][0]['name']
+            return f"{name} by {artist}"
+    except:
+        return "ERROR"
+
+    return "ERROR"
+
+@app.route("/spotify/top")
+def get_top_single():
+    songs = db.get_most_played_songs(1)
+    song = songs[0][1]
+    played = songs[0][-1]
+    return f"{song} x{played}"
+
+# end
 
 @app.route("/get_top_uris/<limit>")
 def get_top_uris(limit):
