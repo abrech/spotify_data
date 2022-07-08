@@ -30,9 +30,9 @@ def run_collector():
 
 def eval_all(recursive_count=0):
     try:
-        # ev.evaluate_all('all', 30)
+        ev.evaluate_all('all', 30)
         # ev.evaluate_genres('all', ['pop', 'dance pop'], 30)
-        ev.evaluate_popularity_songs('all', 1, 1000, 30)
+        # ev.evaluate_popularity_songs('all', 1, 1000, 30)
     except TimeoutError:
         lg.log("RUN "+traceback.format_exc(), 1)
         time.sleep(30)
@@ -41,7 +41,8 @@ def eval_all(recursive_count=0):
             eval_all(recursive_count)
 
 def eval_period():
-    ev.evaluate_period('4week', 28, 30)
+    ev.evaluate_period('4week', 28, 25)
+    ev.evaluate_period('2week', 14, 20)
 
 # schedule.every(4).seconds.do(run_collector)
 # schedule.every(20).seconds.do(eval_all)
@@ -56,6 +57,7 @@ lg.log("RUN Check successful.", 0)
 #"""
 sched = BackgroundScheduler(daemon=True)
 sched.add_job(eval_all,'cron', hour='2', minute='30')
+sched.add_job(eval_period,'cron', hour='3', minute='30')
 sched.add_job(run_collector,'interval', seconds=10)
 # sched.add_job(eval_all,'interval', seconds=20)
 sched.start()
@@ -151,6 +153,7 @@ def get_songs_by_genres():
 atexit.register(lambda: sched.shutdown())
 
 if __name__ == "__main__":
+    eval_period()
     app.run(host='0.0.0.0', port=6400, use_reloader=False)
 """
 # checks pending schedules
