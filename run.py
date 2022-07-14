@@ -66,6 +66,13 @@ sched.start()
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/playlist/set/<key>/<genre>")
+def set_playlist_genre(key, genre):
+    if key == "8BVCYcF79b9noTuK9IL1":
+        ev.evaluate_genres(genre, [genre], 30)
+        return "SUCC"
+    return "ERROR"
+
 @app.route("/")
 def arduino():
     return "Hallotest"
