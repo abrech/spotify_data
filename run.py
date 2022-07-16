@@ -34,7 +34,7 @@ def eval_all(recursive_count=0):
         # ev.evaluate_genres('all', ['pop', 'dance pop'], 30)
         # ev.evaluate_popularity_songs('all', 1, 1000, 30)
     except TimeoutError:
-        lg.log("RUN "+traceback.format_exc(), 1)
+        lg.log("RUN "+traceback.dataat_exc(), 1)
         time.sleep(30)
         if recursive_count < 3:
             recursive_count += 1
@@ -66,10 +66,18 @@ sched.start()
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/playlist/set/<key>/<genre>")
-def set_playlist_genre(key, genre):
+@app.route("/playlist/set/", methods=["POST"])
+def set_playlist_genre():
+    data = request.json()
+    genres = data["genres"]
+    key = data["key"]
+    name = data["name"]
     if key == "8BVCYcF79b9noTuK9IL1":
-        ev.evaluate_genres(genre, [genre], 30)
+        try:
+            sp.create_playlist("Brechi", name)
+        except Exception as ex:
+            lg.log("WARN " + ex)
+        ev.evaluate_genres(name, genres, 30)
         return "SUCC"
     return "ERROR"
 
@@ -123,7 +131,7 @@ def get_temp(apikey, city):
     response = requests.get(URL)
     # checking the status code of the request
     if response.status_code == 200:
-        # getting data in the json format
+        # getting data in the json dataat
         data = response.json()
         desc = data['weather'][0]['description']
         temp = data['main']['temp']
@@ -152,7 +160,7 @@ def get_genres():
     
 @app.route("/get_songs_by_genres")
 def get_songs_by_genres():
-    args = request.args
+    args = args
     genres = args.get('genres').split(" ")
     return json.dumps({'songs': db.get_most_played_by_genres(genres, 30)}), 200, {'ContentType': 'application/json'}
     
@@ -169,9 +177,9 @@ while True:
     try:
         schedule.run_pending()
     except TimeoutError:
-        lg.log("RUN "+traceback.format_exc(), 1)
+        lg.log("RUN "+traceback.dataat_exc(), 1)
     except Exception as ex:
-        lg.log("RUN "+traceback.format_exc(), 2)
+        lg.log("RUN "+traceback.dataat_exc(), 2)
         raise
 """
 
