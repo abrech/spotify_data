@@ -39,9 +39,9 @@ def check_playlist_names():
             if inps[0] == "g":
                 param_kwargs["genres"] += inps[1].split("_")
             if inps[0] == "l":
-                param_kwargs["limit"] = inps[1]
+                param_kwargs["limit"] = int(inps[1])
             if inps[0] == "d":
-                param_kwargs['days'] = inps[1]
+                param_kwargs['days'] = int(inps[1])
         if len(param_kwargs['genres']) > 0:
             param_kwargs.pop("days")
             ev.evaluate_genres(**param_kwargs)
@@ -196,9 +196,8 @@ def get_songs_by_genres():
 atexit.register(lambda: sched.shutdown())
 
 if __name__ == "__main__":
-    check_playlist_names()
-    #eval_period()
-    #app.run(host='0.0.0.0', port=6400, use_reloader=False)
+    eval_period()
+    app.run(host='0.0.0.0', port=6400, use_reloader=False)
 """
 # checks pending schedules
 while True:
