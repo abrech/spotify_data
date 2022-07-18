@@ -1,6 +1,7 @@
 import schedule
 import time
 import math
+import re
 import requests
 import traceback
 from datetime import datetime
@@ -23,9 +24,35 @@ cl = SongCollector(sp, db, lg, 10)
 ev = SongEvaluator(sp, db, lg)
 tmp = 0
 
+    
+def check_playlist_names():
+    its = [item['name'] for item in sp.get_playlists("adrolf")]
+    for name in its:
+        if name[0] != "/":
+            return
+        if not re.search("\/(.*:.*\/?)*", name):
+            return
+        params = name.split("/")
+        param_kwargs = {'pl_name': name,'genres':[], 'limit': 30, 'days':28}
+        for param in params:
+            inps = param.split(":")
+            if inps[0] == "g":
+                param_kwargs["genres"] += inps[1].split("_")
+            if inps[0] == "l":
+                param_kwargs["limit"] = inps[1]
+            if inps[0] == "d":
+                param_kwargs['days'] = inps[1]
+        if len(param_kwargs['genres']) > 0:
+            param_kwargs.pop("days")
+            ev.evaluate_genres(**param_kwargs)
+        else:
+            param_kwargs.pop("genres")
+            ev.evaluate_period(**param_kwargs)
+
 dc_count = 0
 def run_collector():
     global tmp
+    check_playlist_names()
     cl.run()
 
 def eval_all(recursive_count=0):
@@ -43,6 +70,7 @@ def eval_all(recursive_count=0):
 def eval_period():
     ev.evaluate_period('4week', 28, 25)
     ev.evaluate_period('2week', 14, 20)
+
 
 # schedule.every(4).seconds.do(run_collector)
 # schedule.every(20).seconds.do(eval_all)
@@ -74,7 +102,7 @@ def set_playlist_genre():
     name = data["name"]
     if key == "8BVCYcF79b9noTuK9IL1":
         try:
-            sp.create_playlist("Brechi", name)
+            sp.create_playlist("adrolf", name)
         except Exception as ex:
             lg.log("WARN " + ex)
         ev.evaluate_genres(name, genres, 30)
@@ -168,8 +196,9 @@ def get_songs_by_genres():
 atexit.register(lambda: sched.shutdown())
 
 if __name__ == "__main__":
-    eval_period()
-    app.run(host='0.0.0.0', port=6400, use_reloader=False)
+    check_playlist_names()
+    #eval_period()
+    #app.run(host='0.0.0.0', port=6400, use_reloader=False)
 """
 # checks pending schedules
 while True:
