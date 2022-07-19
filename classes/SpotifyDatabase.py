@@ -111,6 +111,35 @@ class SpotifyDatabase:
         uris_limited = uris[:limit]
         out = [uri[0] for uri in uris_limited]
         return out
+    
+    def get_most_played(self, limit=30, **kwargs):
+        pre = f"select distinct s.uri from songs s"
+        post = f" order by s.times_played desc"
+        statement = ""
+        genre_str = ""
+        if "genres" in kwargs and len(kwargs["genres"]) >= 1:
+            genres = kwargs["genres"]
+            genre_str = f"g.genre like '{genres[:1][0]}'"
+            for genre in genres[1:]:
+                genre_str += f" or g.genre like '{genre}'"
+            statement += f" join artists_genres g on s.artist_uri = g.artist_uri "
+        if "days" in kwargs:
+            pre = "select s.uri, count(t.song_uri) as times from songs s "
+            post = f" order by times desc;"
+            time_start = math.floor((datetime.now(timezone.utc) - timedelta(int(kwargs["days"]))).timestamp())
+            if len(genre_str) > 1:
+                statement += f" join songs_times t on s.uri = t.song_uri where t.datetime > {time_start} and ({genre_str}) group by s.uri "
+            else:
+                statement += f" join songs_times t on s.uri = t.song_uri where t.datetime > {time_start} group by s.uri "
+                
+        elif len(genre_str) > 1:
+            statement += f" where {genre_str} "
+        res = pre + statement + post
+        print(res)
+        uris = self.__cursor.execute(res).fetchall()
+        uris_limited = uris[:limit]
+        out = [uri[0] for uri in uris_limited]
+        return out
 
     def get_most_played_by_song_popularity(self, min_popularity, max_popularity, limit):
         statement = f"select * from songs where popularity <= {max_popularity} and popularity >= {min_popularity} order by times_played desc;"

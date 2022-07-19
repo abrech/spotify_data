@@ -11,7 +11,12 @@ class SongEvaluator:
         
     def get_most_played(self, limit):
         return self.__db.get_most_played_uris(limit)
-
+    
+    def evaluate(self, pl_name, **kwargs):
+        most_played = self.__db.get_most_played(**kwargs)
+        self.__spotify.set_playlist(most_played, pl_name)
+        self.__logger.log(f"EVAL Set playlist '{pl_name}'")
+        
     def evaluate_all(self, pl_name, limit):
         most_played = self.get_most_played(limit)
         self.__spotify.set_playlist(most_played, pl_name)

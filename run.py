@@ -44,10 +44,10 @@ def check_playlist_names():
                 param_kwargs['days'] = int(inps[1])
         if len(param_kwargs['genres']) > 0:
             param_kwargs.pop("days")
-            ev.evaluate_genres(**param_kwargs)
+            ev.evaluate(**param_kwargs)
         else:
             param_kwargs.pop("genres")
-            ev.evaluate_period(**param_kwargs)
+            ev.evaluate(**param_kwargs)
 
 dc_count = 0
 def run_collector():
