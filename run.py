@@ -43,7 +43,6 @@ def check_playlist_names():
             if inps[0] == "d":
                 param_kwargs['days'] = int(inps[1])
         if len(param_kwargs['genres']) > 0:
-            param_kwargs.pop("days")
             ev.evaluate(**param_kwargs)
         else:
             param_kwargs.pop("genres")
